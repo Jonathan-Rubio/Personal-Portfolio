@@ -1,0 +1,277 @@
+section {
+	display: block;
+	unicode-bidi: isolate;
+}
+
+.inline-block {
+	display: inline-block;
+}
+.relative {
+	position: relative;
+}
+
+.background-2 {
+    background-color: white;
+}
+
+.background-3 {
+    background-color: #FFB085;
+}
+
+.navbar {
+    border-bottom: 1px solid #333333;
+}
+
+.container-top-heading {
+	position: relative;
+	height: 600px;
+	width: auto;
+}
+
+hr.hr-text {
+	position: relative;
+	border: none;
+	height: 1px;
+	background: #999;
+}
+
+.divider {
+	background-color: #FFB085;
+}
+
+.fira-sans-light {
+  font-display: swap;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  src: url('./fonts/fira-sans-normal-300.woff2') format('woff2');
+}
+
+.fira-sans-regular {
+  font-display: swap;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  src: url('./fonts/fira-sans-normal-400.woff2') format('woff2');
+}
+
+.fira-sans-bold {
+  font-display: swap;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  src: url('./fonts/fira-sans-normal-700.woff2') format('woff2');
+}
+
+.fira-sans-black {
+  font-display: swap;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  word-spacing: -1px;
+  src: url('./fonts/fira-sans-normal-900.woff2') format('woff2');
+}
+
+.hind-guntur-regular {
+  font-family: "Hind Guntur", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.hind-guntur-medium {
+  font-family: "Hind Guntur", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.hind-guntur-semibold {
+  font-family: "Hind Guntur", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.hind-guntur-bold {
+  font-family: "Hind Guntur", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.timeline-with-icons {
+  border-left: 1px solid hsl(0, 0%, 90%);
+  position: relative;
+  list-style: none;
+}
+
+.timeline-with-icons .timeline-item {
+  position: relative;
+}
+
+.timeline-with-icons .timeline-item:after {
+  position: absolute;
+  display: block;
+  top: 0;
+}
+
+.timeline-with-icons .timeline-icon {
+  position: absolute;
+  left: -48px;
+  background-color: hsl(217, 88.2%, 90%);
+  color: hsl(217, 88.8%, 35.1%);
+  border-radius: 50%;
+  height: 31px;
+  width: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 320px) and (max-width: 481px) {
+  .hind-guntur-regular{
+    font-size: 14px;
+  }
+
+  .fira-sans-black{
+  font-size: 65px;
+  }
+
+  .fira-sans-bold{
+    font-size: 25px;
+  }
+
+  .hind-guntur-semibold{
+    font-size: 20px;
+  }
+
+  .hind-guntur-bold{
+    font-size: 22px;
+  }
+
+  .triangle {
+    position: absolute;
+    right: 0%;
+    width: 0;
+    height: 0;
+    border-top: 500px solid transparent;
+    border-right: 200px solid #f9d5a7; /* Colored left border */
+  }
+
+  .background-1 {
+    background-color: #fef7ef;
+    height: 500px;
+  }
+}
+
+
+
+@media (min-width: 481px) and (max-width: 641px) {
+  .hind-guntur-regular{
+    font-size: 14px;
+  }
+
+  .fira-sans-black{
+  font-size: 80px;
+  }
+
+  .fira-sans-bold{
+    font-size: 25px;
+  }
+
+  .hind-guntur-semibold{
+    font-size: 25px;
+  }
+
+  .hind-guntur-bold{
+    font-size: 27px;
+  }
+
+  .triangle {
+    position: absolute;
+    right: 0%;
+    width: 0;
+    height: 0;
+    border-top: 500px solid transparent;
+    border-right: 300px solid #f9d5a7; /* Colored left border */
+  }
+
+  .background-1 {
+    background-color: #fef7ef;
+    height: 500px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 961px) {
+  .hind-guntur-regular{
+    font-size: 16px;
+  }
+
+  .fira-sans-black{
+  font-size: 120px;
+  }
+
+  .fira-sans-bold{
+    font-size: 30px;
+  }
+
+  .hind-guntur-semibold{
+    font-size: 30px;
+  }
+
+  .hind-guntur-bold{
+    font-size: 32px;
+  }
+
+    .triangle {
+  position: absolute;
+  right: 0%;
+  width: 0;
+  height: 0;
+  border-top: 600px solid transparent;
+  border-right: 400px solid #f9d5a7; /* Colored left border */
+  }
+
+  .background-1 {
+    background-color: #fef7ef;
+    height: 600px;
+  }
+}
+
+@media (min-width: 961px) {
+  .hind-guntur-regular{
+    font-size: 18px;
+  }
+
+  .fira-sans-black{
+  font-size: 140px;
+  }
+
+  .fira-sans-bold{
+    font-size: 40px;
+  }
+
+  .hind-guntur-semibold{
+    font-size: 35px;
+  }
+
+  .hind-guntur-bold{
+    font-size: 37px;
+  }
+
+  .triangle {
+  position: absolute;
+  right: 0%;
+  width: 0;
+  height: 0;
+  border-top: 700px solid transparent;
+  border-right: 500px solid #f9d5a7; /* Colored left border */
+  }
+
+  .background-1 {
+    background-color: #fef7ef;
+    height: 700px;
+  }
+}
+
