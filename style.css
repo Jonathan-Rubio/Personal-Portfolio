@@ -129,13 +129,143 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ── Equal height cards (collapsed state only) ──
+   Each .col is NOT a flex stretcher so cards size independently.
+   A fixed min-height on .card-body makes all collapsed cards look
+   uniform; expanded cards grow naturally and push rows below down. */
+.row > .col {
+    display: block;
+}
+.card {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+}
+.card > .card-body {
+    min-height: 90px;
+}
+.card-footer-bar,
+.achievement-footer {
+    margin-top: auto;
+}
+
+/* ── Card expand behaviour ── */
+.project-card {
+    cursor: pointer;
+    transition: box-shadow 0.25s ease;
+}
+.project-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.13) !important;
+}
+.project-card.expanded {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.13) !important;
+}
+
+/* Expand panel stays in normal flow — pushes rows below down when open */
+.card-expand {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 1rem;
+    border-top: 0 solid #eee;
+}
+.card-expand.open {
+    max-height: 400px;
+    padding: 1rem;
+    border-top: 1px solid #eee;
+}
+
+/* Bottom bar: never overlap */
+.card-footer-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 12px;
+    border-top: 1px solid #f0f0f0;
+}
+.card-footer-bar .hint-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.card-footer-bar small {
+    white-space: nowrap;
+}
+
+/* Chevron icon rotate */
+.card-chevron {
+    transition: transform 0.3s ease;
+    color: #90AACB;
+    flex-shrink: 0;
+}
+.project-card.expanded .card-chevron {
+    transform: rotate(180deg);
+}
+
+/* GitHub / external button */
+.btn-project {
+    background-color: #90AACB;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-family: 'Hind Guntur', sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s ease;
+}
+.btn-project:hover {
+    background-color: #7a97bc;
+    color: #fff;
+}
+
+.card-detail-text {
+    font-family: 'Hind Guntur', sans-serif;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.card-tag {
+    background: #f0f4f8;
+    color: #90AACB;
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 600;
+}
+
+/* Click hint */
+.click-hint {
+    font-size: 11px;
+    color: #aaa;
+    font-family: 'Hind Guntur', sans-serif;
+    margin-left: 4px;
+}
+
+/* ── Responsive breakpoints ── */
 @media (min-width: 320px) and (max-width: 481px) {
   .hind-guntur-regular{
     font-size: 14px;
   }
 
   .fira-sans-black{
-  font-size: 65px;
+    font-size: 65px;
   }
 
   .fira-sans-bold{
@@ -156,7 +286,7 @@ a:hover {
     width: 0;
     height: 0;
     border-top: 500px solid transparent;
-    border-right: 200px solid #f9d5a7; /* Colored left border */
+    border-right: 200px solid #f9d5a7;
   }
 
   .background-1 {
@@ -165,15 +295,13 @@ a:hover {
   }
 }
 
-
-
 @media (min-width: 481px) and (max-width: 641px) {
   .hind-guntur-regular{
     font-size: 14px;
   }
 
   .fira-sans-black{
-  font-size: 80px;
+    font-size: 80px;
   }
 
   .fira-sans-bold{
@@ -194,7 +322,7 @@ a:hover {
     width: 0;
     height: 0;
     border-top: 500px solid transparent;
-    border-right: 300px solid #f9d5a7; /* Colored left border */
+    border-right: 300px solid #f9d5a7;
   }
 
   .background-1 {
@@ -209,7 +337,7 @@ a:hover {
   }
 
   .fira-sans-black{
-  font-size: 120px;
+    font-size: 120px;
   }
 
   .fira-sans-bold{
@@ -224,13 +352,13 @@ a:hover {
     font-size: 32px;
   }
 
-    .triangle {
-  position: absolute;
-  right: 0%;
-  width: 0;
-  height: 0;
-  border-top: 600px solid transparent;
-  border-right: 400px solid #f9d5a7; /* Colored left border */
+  .triangle {
+    position: absolute;
+    right: 0%;
+    width: 0;
+    height: 0;
+    border-top: 600px solid transparent;
+    border-right: 400px solid #f9d5a7;
   }
 
   .background-1 {
@@ -245,7 +373,7 @@ a:hover {
   }
 
   .fira-sans-black{
-  font-size: 140px;
+    font-size: 140px;
   }
 
   .fira-sans-bold{
@@ -261,12 +389,12 @@ a:hover {
   }
 
   .triangle {
-  position: absolute;
-  right: 0%;
-  width: 0;
-  height: 0;
-  border-top: 700px solid transparent;
-  border-right: 500px solid #f9d5a7; /* Colored left border */
+    position: absolute;
+    right: 0%;
+    width: 0;
+    height: 0;
+    border-top: 700px solid transparent;
+    border-right: 500px solid #f9d5a7;
   }
 
   .background-1 {
@@ -274,4 +402,3 @@ a:hover {
     height: 700px;
   }
 }
-
