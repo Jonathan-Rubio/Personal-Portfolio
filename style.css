@@ -149,7 +149,7 @@ a:hover {
     margin-top: auto;
 }
 
-/* ── Card expand behaviour ── */
+/* ──Card expand behaviour── */
 .project-card {
     cursor: pointer;
     transition: box-shadow 0.25s ease;
