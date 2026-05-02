@@ -5,7 +5,7 @@ A responsive personal portfolio website built to showcase my projects, technical
 ## 🌐 Live Demo
 
 Visit the portfolio here:
-👉 https://jonathan-rubio.github.io/Personal-Portfolio/index.html
+👉 https://jonathan-rubio.github.io/Personal-Portfolio/
 
 ---
 
