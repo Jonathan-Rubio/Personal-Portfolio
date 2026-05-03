@@ -1,411 +1,522 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Site</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Hind+Guntur:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects &amp; Achievements — Jonathan Rubio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600;700;900&family=Hind+Guntur:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Grid ──────────────────────────────────────────────────── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding: 3rem clamp(1.5rem, 6vw, 5rem);
+      max-width: 1140px;
+      margin: 0 auto;
+      align-items: start; /* expanded card pushes rows below, not siblings */
+    }
+    @media (max-width: 900px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .projects-grid { grid-template-columns: 1fr; } }
+
+    /* ── Card shell ─────────────────────────────────────────────── */
+    .project-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .project-card:hover               { box-shadow: var(--shadow-lg); }
+    .project-card.expanded            { border-color: var(--blue); }
+
+    /* ── Image banner ───────────────────────────────────────────── */
+    .project-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      flex-shrink: 0;
+      background: var(--off-white);
+    }
+    /* Fallback when no real image — show a styled placeholder banner */
+    .project-img-placeholder {
+      width: 100%;
+      height: 180px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, rgba(144,170,203,.18), rgba(255,176,133,.12));
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Body text (always visible) ─────────────────────────────── */
+    .project-body {
+      padding: 1rem 1.1rem .75rem;
+      flex: 1;
+    }
+    .project-summary {
+      font-size: .91rem;
+      color: var(--dark);
+      line-height: 1.65;
+    }
+
+    /* ── Bottom bar: toggle left, date right ────────────────────── */
+    .project-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .6rem 1.1rem .75rem;
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      transition: background var(--transition);
+    }
+    .project-footer:hover { background: var(--off-white); }
+
+    .project-toggle {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-family: 'Fira Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .project-card.expanded .project-toggle { color: var(--blue); }
+
+    .project-toggle-arrow {
+      display: inline-block;
+      font-style: normal;
+      font-size: .8rem;
+      line-height: 1;
+      transition: transform .35s ease;
+    }
+    .project-card.expanded .project-toggle-arrow { transform: rotate(180deg); }
+
+    .project-date {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* ── Expanded details panel ─────────────────────────────────── */
+    .project-details {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height .45s ease, opacity .35s ease;
+      border-top: 1px solid transparent;
+    }
+    .project-card.expanded .project-details {
+      max-height: 600px;
+      opacity: 1;
+      border-top-color: var(--border);
+    }
+
+    .project-details-inner {
+      padding: 1rem 1.1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: .9rem;
+    }
+
+    .project-detail-desc {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .project-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .tag {
+      font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: .22rem .6rem; border-radius: 6px;
+      background: rgba(144,170,203,.11); color: var(--blue); border: 1px solid rgba(144,170,203,.22);
+    }
+    .tag.peach {
+      background: rgba(255,176,133,.11); color: var(--peach); border-color: rgba(255,176,133,.22);
+    }
+
+    /* Visit button */
+    .btn-visit {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .55rem 1.2rem;
+      border-radius: 8px;
+      font-family: 'Fira Sans', sans-serif;
+      font-weight: 600;
+      font-size: .85rem;
+      background: var(--dark);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      align-self: flex-start;
+    }
+    .btn-visit:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(144,170,203,.35); }
+    .btn-visit svg   { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
+  </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-white fixed-top">
-		<div class="container-fluid">
-			<a class="navbar-brand">
-            	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFB085" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                	<path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-            	</svg>
-				<span class="relative inline-block fira-sans-regular"><span style="color:#90AACB">JR</span></span>
-            	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFB085" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                	<path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-            	</svg>
-			</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-				data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-				aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
-				<div class="navbar-nav" style="gap:15px;">
-					<a class="nav-link fira-sans-light text-muted" style="font-size: 18px;" aria-current="page" href="./index.html">
-						Home
-					</a>
-					<a class="nav-link fira-sans-light text-muted" style="font-size: 18px;" href="./skills-experience.html">
-						Skills & experience
-					</a>
-					<a class="nav-link fira-sans-light text-muted" style="font-size: 18px;" href="./education.html">
-						Education
-					</a>
-                 	<a class="nav-link fira-sans-light active" style="font-size: 18px;" href="./projects-achievements.html">
-						<span style="color:#FFB085">Projects & achievements</span>
-					</a>
-				</div>
-			</div>
-		</div>
-	</nav>
-	
-    <section class="background-2">
-        <div class="album py-5 mt-4">
-            <div class="container px-4 py-5">
-                <h2 class="fw-bold lh-1 mb-5 pb-5 hind-guntur-bold">&lt; Projects &gt;</h2>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-                    <!-- ── Card 1: Blog-Web App ── -->
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm project-card" onclick="toggleCard(this)">
-                            <img src="images/blog.png" class="bd-placeholder-img card-img-top object-fit-cover" height="225" alt="Blog web application cover">
-                            <div class="card-body">
-                                <p class="card-text">Blog Web Application using Node.js, Express.js, and EJS. It allows users to create, view, edit and delete blog posts.</p>
-                            </div>
-                            <div class="card-footer-bar">
-                                <div class="hint-group">
-                                    <svg class="card-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                                    </svg>
-                                    <span class="click-hint">click to expand</span>
-                                </div>
-                                <small class="text-body-secondary">Issued October 2025</small>
-                            </div>
-                            <div class="card-expand">
-                                <div class="card-tags">
-                                    <span class="card-tag">Node.js</span>
-                                    <span class="card-tag">Express.js</span>
-                                    <span class="card-tag">EJS</span>
-                                    <span class="card-tag">REST API</span>
-                                </div>
-                                <p class="card-detail-text">Full-stack blog platform with CRUD functionality. Users can write and publish posts, edit existing content, and delete entries — all persisted through an Express backend with EJS templating.</p>
-                                <a href="https://github.com/Jonathan-Rubio/Blog-Web-Application" target="_blank" rel="noopener noreferrer" class="btn-project mb-3" onclick="event.stopPropagation()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
-                                    </svg>
-                                    View on GitHub
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+  <!-- ═══ NAVBAR ═══════════════════════════════════════════════ -->
+  <nav class="nav" id="mainNav">
+    <a class="nav-logo" href="./index.html">
+      <span class="bracket">&lt;</span>
+      <span class="initials">JR</span>
+      <span class="bracket">&gt;</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a class="nav-link"        href="./index.html">Home</a></li>
+      <li><a class="nav-link"        href="./skills-experience.html">Skills &amp; Experience</a></li>
+      <li><a class="nav-link"        href="./education.html">Education</a></li>
+      <li><a class="nav-link active" href="./projects-achievements.html">Projects &amp; Achievements</a></li>
+    </ul>
+  </nav>
 
-                    <!-- ── Card 2: SAE Aero Design ── -->
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm project-card" onclick="toggleCard(this)">
-                            <img src="images/SAE-INTERNATIONAL.png" class="bd-placeholder-img card-img-top object-fit-cover" height="225" alt="SAE Aero Design logo">
-                            <div class="card-body">
-                                <p class="card-text">Participated at SAE Aero Design International competition during COVID-19 pandemic.</p>
-                            </div>
-                            <div class="card-footer-bar">
-                                <div class="hint-group">
-                                    <svg class="card-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                                    </svg>
-                                    <span class="click-hint">click to expand</span>
-                                </div>
-                                <small class="text-body-secondary">Issued July 2020</small>
-                            </div>
-                            <div class="card-expand">
-                                <div class="card-tags">
-                                    <span class="card-tag">Mechanical Design</span>
-                                    <span class="card-tag">Aerodynamics</span>
-                                    <span class="card-tag">Team Lead</span>
-                                </div>
-                                <p class="card-detail-text">Competed in SAE Aero Design International during the COVID-19 pandemic in a remote/virtual format. Responsible for aircraft structural design and technical report writing.</p>
-                                <a href="https://www.saeaerodesign.com/" target="_blank" rel="noopener noreferrer" class="btn-project mb-3" onclick="event.stopPropagation()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 9H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1"/>
-                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h.98A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
-                                    </svg>
-                                    View Competition
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+  <div class="page-wrap">
 
-                    <!-- ── Card 3: TrepCamp ── -->
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm project-card" onclick="toggleCard(this)">
-                            <img src="images/brain-ed.JPG" class="bd-placeholder-img card-img-top object-fit-cover" height="225" alt="3rd place at TrepCamp photo">
-                            <div class="card-body">
-                                <p class="card-text">3rd Place at TrepCamp International competition in Boston, Massachusetts.</p>
-                            </div>
-                            <div class="card-footer-bar">
-                                <div class="hint-group">
-                                    <svg class="card-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                                    </svg>
-                                    <span class="click-hint">click to expand</span>
-                                </div>
-                                <small class="text-body-secondary">Issued July 2019</small>
-                            </div>
-                            <div class="card-expand">
-                                <div class="card-tags">
-                                    <span class="card-tag">Entrepreneurship</span>
-                                    <span class="card-tag">Innovation</span>
-                                    <span class="card-tag">Leadership</span>
-                                </div>
-                                <p class="card-detail-text">Earned 3rd place at TrepCamp International, a high-impact entrepreneurship simulator held in Boston, MA. Pitched a startup concept to a panel of industry judges and investors.</p>
-                                <a href="https://trepcamp.org/" target="_blank" rel="noopener noreferrer" class="btn-project mb-3" onclick="event.stopPropagation()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 9H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1"/>
-                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h.98A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
-                                    </svg>
-                                    View Program
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+    <!-- ═══ PAGE HERO ════════════════════════════════════════════ -->
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="section-label">What I've Built</div>
+        <h1 class="section-title">
+          <span class="bracket">&lt;</span> Projects &amp; Achievements <span class="bracket">/&gt;</span>
+        </h1>
+      </div>
+    </div>
 
-                    <!-- ── Card 4: ARLISS / Quantum ── -->
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm project-card" onclick="toggleCard(this)">
-                            <img src="images/quantum.jpg" class="bd-placeholder-img card-img-top object-fit-cover" height="225" alt="Team photo">
-                            <div class="card-body">
-                                <p class="card-text">Participated at ARLISS International, a rover launching competition in Black Rock Desert, Nevada.</p>
-                            </div>
-                            <div class="card-footer-bar">
-                                <div class="hint-group">
-                                    <svg class="card-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                                    </svg>
-                                    <span class="click-hint">click to expand</span>
-                                </div>
-                                <small class="text-body-secondary">Issued September 2018</small>
-                            </div>
-                            <div class="card-expand">
-                                <div class="card-tags">
-                                    <span class="card-tag">Robotics</span>
-                                    <span class="card-tag">Systems Engineering</span>
-                                    <span class="card-tag">Electronics</span>
-                                </div>
-                                <p class="card-detail-text">Designed and built an autonomous rover launched via rocket at ARLISS International in Black Rock Desert, Nevada. Responsible for rover chassis design and sensor integration for autonomous navigation.</p>
-                                <a href="https://www.cetys.mx/noticias/robots-mexicanos-compiten-en-nevada/" target="_blank" rel="noopener noreferrer" class="btn-project mb-3" onclick="event.stopPropagation()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 9H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1"/>
-                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h.98A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
-                                    </svg>
-                                    Read Article
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+    <!-- ═══ PROJECTS GRID ════════════════════════════════════════ -->
+    <div class="projects-grid">
 
-                    <!-- ── Card 5: CanSat ── -->
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm project-card" onclick="toggleCard(this)">
-                            <img src="images/cansat.jpg" class="bd-placeholder-img card-img-top object-fit-cover" height="225" alt="Team photo with CanSat prototype">
-                            <div class="card-body">
-                                <p class="card-text">3rd Place at Regional CanSat competition in Tijuana, B.C., México.</p>
-                            </div>
-                            <div class="card-footer-bar">
-                                <div class="hint-group">
-                                    <svg class="card-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                                    </svg>
-                                    <span class="click-hint">click to expand</span>
-                                </div>
-                                <small class="text-body-secondary">Issued May 2018</small>
-                            </div>
-                            <div class="card-expand">
-                                <div class="card-tags">
-                                    <span class="card-tag">Space Systems</span>
-                                    <span class="card-tag">Embedded Systems</span>
-                                    <span class="card-tag">Telemetry</span>
-                                </div>
-                                <p class="card-detail-text">Placed 3rd at the Regional CanSat Competition in Tijuana, B.C. Built a soda-can sized satellite that transmitted sensor telemetry data during a parachute descent from altitude.</p>
-                                <a href="https://www.cansatcompetition.com/" target="_blank" rel="noopener noreferrer" class="btn-project mb-3" onclick="event.stopPropagation()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 9H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1"/>
-                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h.98A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
-                                    </svg>
-                                    View Competition
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+      <!-- ── Card 1: Personal Portfolio ───────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/portfolio-preview.png"
+          alt="Personal Portfolio Website"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">🌐</div>
 
-                </div>
+        <div class="project-body">
+          <p class="project-summary">
+            A responsive personal portfolio website showcasing projects, technical skills,
+            and professional experience. Built as a multi-page site with smooth animations
+            and a clean design system.
+          </p>
+        </div>
+
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued 2025</span>
+        </div>
+
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">HTML5</span>
+              <span class="tag">CSS3</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag peach">Bootstrap</span>
+              <span class="tag peach">AOS</span>
             </div>
+            <p class="project-detail-desc">
+              Multi-page portfolio built from scratch with a custom CSS design system,
+              scroll-triggered animations, and a fully responsive layout that works
+              across all screen sizes.
+            </p>
+            <a class="btn-visit" href="https://jonathan-rubio.github.io/Personal-Portfolio/" target="_blank">
+              <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Card 2: Full-Stack Blog App ──────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/blog-preview.png"
+          alt="Blog Web Application"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">⚙️</div>
+
+        <div class="project-body">
+          <p class="project-summary">
+            Blog Web Application using Node.js, Express.js, and EJS. It allows users
+            to create, view, edit and delete blog posts.
+          </p>
         </div>
 
-        <div class="album">
-            <div class="container px-4 py-5 mb-5">
-                <h2 class="fw-bold lh-1 mb-5 pb-5 hind-guntur-bold">&lt; Achievements &gt;</h2>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued October 2025</span>
+        </div>
 
-					<div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm project-card" onclick="toggleCard(this)">
-                            <img src="images/CertificateBootcamp.jpg" class="bd-placeholder-img card-img-top object-fit-cover" height="225" alt="Team photo">
-                            <div class="card-body">
-                                <p class="card-text">Certificate of completion of The Complete Full-Stack Web Development Bootcamp.</p>
-                            </div>
-                            <div class="card-footer-bar">
-                                <div class="hint-group">
-                                    <svg class="card-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                                    </svg>
-                                    <span class="click-hint">click to expand</span>
-                                </div>
-                                <small class="text-body-secondary">Issued April 2026</small>
-                            </div>
-                            <div class="card-expand">
-                                <div class="card-tags">
-                                    <span class="card-tag">React.js</span>
-                                    <span class="card-tag">Node.js</span>
-									<span class="card-tag">JavaScript</span>
-                                    <span class="card-tag">PostgreSQL</span>
-									<span class="card-tag">REST API</span>
-                                </div>
-                                <p class="card-detail-text">Full-Stack Web Development Bootcamp that teaches modern web development skills such as Javascript, React.js, Node.js, PostgreSQL, Web3 and DApps.</p>
-                                <a href="https://www.udemy.com/certificate/UC-963a9903-367d-431c-90fc-4d9434c2de91/?lid=tlftjymbsk7t&utm_source=braze&utm_medium=email&utm_campaign=250611_Student-MX_EM-Lifecycle_Course-Completion-MVP_T1&utm_method=lifecycle-nurture&utm_funnel=engagement&utm_audience=mx&utm_tactic=progress&utm_content=udemy_braze.1cb6d7b71b9ac5f2f9c5c49038dcb84c" target="_blank" rel="noopener noreferrer" class="btn-project mb-3" onclick="event.stopPropagation()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 9H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1"/>
-                                        <path d="M9 5.5a3 3 0 0 0-2.83 4h.98A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
-                                    </svg>
-                                    View Certificate
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm">
-                            <img src="images/trepcamp.png" class="bd-placeholder-img card-img-top object-fit-contain" height="225" alt="Trepcamp logo">
-                            <div class="card-body">
-                                <p class="card-text">Entrepreneurial Simulator for high-impact entrepreneurs certificate.</p>
-                            </div>
-                            <div class="achievement-footer d-flex justify-content-end align-items-center px-3 pb-2 pt-1" style="border-top: 1px solid #f0f0f0;">
-                                <small class="text-body-secondary">Issued July 2019</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm">
-                            <img src="images/ASSOCIATE-MECHANICAL-DESIGN.png" class="bd-placeholder-img card-img-top object-fit-contain" height="225" alt="SolidWorks associate logo">
-                            <div class="card-body">
-                                <p class="card-text">SolidWorks associate certificate in Mechanical Design.</p>
-                            </div>
-                            <div class="achievement-footer d-flex justify-content-end align-items-center px-3 pb-2 pt-1" style="border-top: 1px solid #f0f0f0;">
-                                <small class="text-body-secondary">Issued May 2019</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="400">
-                        <div class="card shadow-sm">
-                            <img src="images/Logo_centrado_de_la_Agencia_Espacial_Mexicana.svg.png" class="bd-placeholder-img card-img-top object-fit-contain" height="225" alt="Mexican Space Agency logo">
-                            <div class="card-body">
-                                <p class="card-text">Acknowledgement in space systems engineering applied to PicoSat by the Mexican Space Agency.</p>
-                            </div>
-                            <div class="achievement-footer d-flex justify-content-end align-items-center px-3 pb-2 pt-1" style="border-top: 1px solid #f0f0f0;">
-                                <small class="text-body-secondary">Issued April 2018</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">Node.js</span>
+              <span class="tag">Express.js</span>
+              <span class="tag">EJS</span>
+              <span class="tag peach">REST API</span>
             </div>
+            <p class="project-detail-desc">
+              Full-stack blog platform with CRUD functionality. Users can write and
+              publish posts, edit existing content, and delete entries — all persisted
+              through an Express backend with EJS templating.
+            </p>
+            <a class="btn-visit" href="https://github.com/Jonathan-Rubio" target="_blank">
+              <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+              View on GitHub
+            </a>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <section class="background-3">
-        <div class="container">
-            <footer class="d-flex flex-wrap justify-content-between align-items-center pb-5 pt-3 border-top">
-                <div class="col-md-4 d-flex align-items-center">
-                    <span class="mb-3 mb-md-0 text-body-secondary hind-guntur-medium" style="font-size: 16px;">© 2025 Jonathan Rubio. All rights reserved.</span>
-                </div>
-                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-                    <li class="ms-3">
-                        <a class="text-body-secondary" href="https://github.com/Jonathan-Rubio" aria-label="Github" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
-                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="ms-3">
-                        <a class="text-body-secondary" href="https://www.linkedin.com/in/jonathan-rubio/" aria-label="LinkedIn" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
-                                <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="ms-3">
-                        <a class="text-body-secondary" href="mailto:rubiomolina.jonathan@gmail.com" aria-label="Mail" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </footer>
+      <!-- ── Card 3: SAE International ────────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/sae.png"
+          alt="SAE International"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">✈️</div>
+
+        <div class="project-body">
+          <p class="project-summary">
+            Participated at SAE Aero Design International competition during
+            COVID-19 pandemic.
+          </p>
         </div>
-    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        AOS.init();
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued July 2020</span>
+        </div>
 
-        // After page loads, measure the tallest card in each row and
-        // lock all cards in that row to that height — so they're always
-        // uniform when collapsed.
-        function equaliseCardHeights() {
-            // Group .col elements by their vertical offset (i.e. which row they're in)
-            const cols = Array.from(document.querySelectorAll('.row > .col'));
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">Design Engineering</span>
+              <span class="tag peach">Aerodynamics</span>
+              <span class="tag">Team Collaboration</span>
+            </div>
+            <p class="project-detail-desc">
+              Competed in the SAE Aero Design International competition, designing and
+              building a remote-controlled aircraft within strict weight and payload
+              constraints. Adapted to virtual/remote competition format during the pandemic.
+            </p>
+            <a class="btn-visit" href="https://www.saeaerodesign.com/" target="_blank">
+              <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>
+              Visit Page
+            </a>
+          </div>
+        </div>
+      </div>
 
-            // Reset any previously locked heights first
-            cols.forEach(col => {
-                const card = col.querySelector('.card');
-                if (card) card.style.minHeight = '';
-            });
+      <!-- ── Card 4: TrepCamp ──────────────────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/trepcamp-award.png"
+          alt="TrepCamp 3rd Place"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">🎓</div>
 
-            // Group cols by row (same offsetTop = same row)
-            const rows = {};
-            cols.forEach(col => {
-                const top = col.getBoundingClientRect().top;
-                if (!rows[top]) rows[top] = [];
-                rows[top].push(col);
-            });
+        <div class="project-body">
+          <p class="project-summary">
+            3rd Place at TrepCamp International competition in Boston, Massachusetts.
+          </p>
+        </div>
 
-            // For each row, find the tallest card and lock all to that height
-            Object.values(rows).forEach(rowCols => {
-                const maxH = Math.max(...rowCols.map(col => {
-                    const card = col.querySelector('.card');
-                    return card ? card.offsetHeight : 0;
-                }));
-                rowCols.forEach(col => {
-                    const card = col.querySelector('.card');
-                    if (card) card.style.minHeight = maxH + 'px';
-                });
-            });
-        }
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued July 2019</span>
+        </div>
 
-        function resetCardHint(card) {
-            const hint = card.querySelector('.click-hint');
-            if (hint) hint.textContent = 'click to expand';
-        }
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">Entrepreneurship</span>
+              <span class="tag peach">Boston, MA</span>
+              <span class="tag">Leadership</span>
+              <span class="tag peach">3rd Place</span>
+            </div>
+            <p class="project-detail-desc">
+              Awarded 3rd place at the TrepCamp International entrepreneurial competition.
+              Developed and pitched a business venture to a panel of judges, competing
+              against teams from across the globe in Boston, Massachusetts.
+            </p>
+            <a class="btn-visit" href="https://trepcamp.org/" target="_blank">
+              <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>
+              Visit Page
+            </a>
+          </div>
+        </div>
+      </div>
 
-        function toggleCard(card) {
-            const panel = card.querySelector('.card-expand');
-            const hint = card.querySelector('.click-hint');
-            const isOpen = panel.classList.contains('open');
+      <!-- ── Card 5: Boeing ────────────────────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/boeing.png"
+          alt="Boeing Encore Interiors"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">🏭</div>
 
-            // Close any other open cards and reset their hints
-            document.querySelectorAll('.project-card.expanded').forEach(c => {
-                c.querySelector('.card-expand').classList.remove('open');
-                c.classList.remove('expanded');
-                resetCardHint(c);
-            });
+        <div class="project-body">
+          <p class="project-summary">
+            Led design and validation of high-volume aircraft galley components at
+            Boeing Encore Interiors.
+          </p>
+        </div>
 
-            // Toggle the clicked card
-            if (!isOpen) {
-                panel.classList.add('open');
-                card.classList.add('expanded');
-                if (hint) hint.textContent = 'click to collapse';
-            }
-        }
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">May 2022 — Present</span>
+        </div>
 
-        // Run on load and on resize
-        window.addEventListener('load', equaliseCardHeights);
-        window.addEventListener('resize', equaliseCardHeights);
-    </script>
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">Design Engineering</span>
+              <span class="tag peach">Validation</span>
+              <span class="tag">Technical Leadership</span>
+              <span class="tag peach">Aerospace</span>
+            </div>
+            <p class="project-detail-desc">
+              Delivered technical documentation, test procedures, and validation reports
+              across multiple complex concurrent projects. Collaborated with
+              multidisciplinary teams to analyze requirements and meet delivery deadlines.
+            </p>
+            <a class="btn-visit" href="https://www.boeingencoreinteriors.com/" target="_blank">
+              <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>
+              Visit Page
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Card 6: Hyundai Translead ─────────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/hyundai-translead.png"
+          alt="Hyundai Translead"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">🔬</div>
+
+        <div class="project-body">
+          <p class="project-summary">
+            Designed and assembled testing configurations that reduced validation time
+            and improved efficiency at Hyundai Translead.
+          </p>
+        </div>
+
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Aug 2020 — Feb 2021</span>
+        </div>
+
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">Testing</span>
+              <span class="tag">Data Analysis</span>
+              <span class="tag peach">Optimization</span>
+              <span class="tag peach">Validation</span>
+            </div>
+            <p class="project-detail-desc">
+              Produced research reports aligning results with engineering expectations.
+              Testing configurations built reduced turnaround time significantly —
+              data analysis skills directly applicable to software QA and testing roles.
+            </p>
+            <a class="btn-visit" href="https://www.hyundaitranslead.com/" target="_blank">
+              <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>
+              Visit Page
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.projects-grid -->
+
+    <!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="footer-copy">© 2025 Jonathan Rubio. All rights reserved.</p>
+        <div class="social-links">
+          <a href="https://github.com/Jonathan-Rubio" class="social-link" target="_blank" aria-label="GitHub">
+            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/jonathan-rubio/" class="social-link" target="_blank" aria-label="LinkedIn">
+            <svg viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></svg>
+          </a>
+          <a href="mailto:rubiomolina.jonathan@gmail.com" class="social-link" aria-label="Email">
+            <svg viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/></svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /.page-wrap -->
+
+  <script src="index.js"></script>
+  <script>
+    // ── Individual card expand / collapse ─────────────────────
+    document.querySelectorAll('.project-card').forEach(function (card) {
+      var footer     = card.querySelector('.project-footer');
+      var toggleText = card.querySelector('.project-toggle-text');
+      if (!footer) return;
+
+      footer.addEventListener('click', function () {
+        var isExpanded = card.classList.toggle('expanded');
+        toggleText.textContent = isExpanded ? 'click to collapse' : 'click to expand';
+      });
+    });
+  </script>
 </body>
-
 </html>
-
