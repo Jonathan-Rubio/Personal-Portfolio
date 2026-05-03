@@ -8,173 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600;700;900&family=Hind+Guntur:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-  <style>
-    /* ── Grid ──────────────────────────────────────────────────── */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      padding: 3rem clamp(1.5rem, 6vw, 5rem);
-      max-width: 1140px;
-      margin: 0 auto;
-      align-items: start; /* expanded card pushes rows below, not siblings */
-    }
-    @media (max-width: 900px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 560px) { .projects-grid { grid-template-columns: 1fr; } }
-
-    /* ── Card shell ─────────────────────────────────────────────── */
-    .project-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      transition: box-shadow var(--transition), border-color var(--transition);
-    }
-    .project-card:hover               { box-shadow: var(--shadow-lg); }
-    .project-card.expanded            { border-color: var(--blue); }
-
-    /* ── Image banner ───────────────────────────────────────────── */
-    .project-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      object-position: center top;
-      display: block;
-      flex-shrink: 0;
-      background: var(--off-white);
-    }
-    /* Fallback when no real image — show a styled placeholder banner */
-    .project-img-placeholder {
-      width: 100%;
-      height: 180px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3.5rem;
-      background: linear-gradient(135deg, rgba(144,170,203,.18), rgba(255,176,133,.12));
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* ── Body text (always visible) ─────────────────────────────── */
-    .project-body {
-      padding: 1rem 1.1rem .75rem;
-      flex: 1;
-    }
-    .project-summary {
-      font-size: .91rem;
-      color: var(--dark);
-      line-height: 1.65;
-    }
-
-    /* ── Bottom bar: toggle left, date right ────────────────────── */
-    .project-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: .6rem 1.1rem .75rem;
-      border-top: 1px solid var(--border);
-      cursor: pointer;
-      user-select: none;
-      transition: background var(--transition);
-    }
-    .project-footer:hover { background: var(--off-white); }
-
-    .project-toggle {
-      display: flex;
-      align-items: center;
-      gap: .35rem;
-      font-family: 'Fira Sans', sans-serif;
-      font-size: .75rem;
-      font-weight: 600;
-      color: var(--muted);
-      transition: color var(--transition);
-    }
-    .project-card.expanded .project-toggle { color: var(--blue); }
-
-    .project-toggle-arrow {
-      display: inline-block;
-      font-style: normal;
-      font-size: .8rem;
-      line-height: 1;
-      transition: transform .35s ease;
-    }
-    .project-card.expanded .project-toggle-arrow { transform: rotate(180deg); }
-
-    .project-date {
-      font-family: 'Fira Sans', sans-serif;
-      font-size: .75rem;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    /* ── Expanded details panel ─────────────────────────────────── */
-    .project-details {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height .45s ease, opacity .35s ease;
-      border-top: 1px solid transparent;
-    }
-    .project-card.expanded .project-details {
-      max-height: 600px;
-      opacity: 1;
-      border-top-color: var(--border);
-    }
-
-    .project-details-inner {
-      padding: 1rem 1.1rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: .9rem;
-    }
-
-    .project-detail-desc {
-      font-size: .88rem;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-
-    .project-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
-    .tag {
-      font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      padding: .22rem .6rem; border-radius: 6px;
-      background: rgba(144,170,203,.11); color: var(--blue); border: 1px solid rgba(144,170,203,.22);
-    }
-    .tag.peach {
-      background: rgba(255,176,133,.11); color: var(--peach); border-color: rgba(255,176,133,.22);
-    }
-
-    /* Visit button */
-    .btn-visit {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      padding: .55rem 1.2rem;
-      border-radius: 8px;
-      font-family: 'Fira Sans', sans-serif;
-      font-weight: 600;
-      font-size: .85rem;
-      background: var(--dark);
-      color: var(--white);
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-      align-self: flex-start;
-    }
-    .btn-visit:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(144,170,203,.35); }
-    .btn-visit svg   { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
-  </style>
 </head>
 <body>
 
   <!-- ═══ NAVBAR ═══════════════════════════════════════════════ -->
-  <nav class="nav" id="mainNav">
+  <nav class="nav" id="mainNav"> 
     <a class="nav-logo" href="./index.html">
       <span class="bracket">&lt;</span>
       <span class="initials">JR</span>
@@ -198,7 +36,7 @@
       <div class="page-hero-inner">
         <div class="section-label">What I've Built</div>
         <h1 class="section-title">
-          <span class="bracket">&lt;</span> Projects &amp; Achievements <span class="bracket">/&gt;</span>
+          <span class="bracket">&lt;</span> Projects <span class="bracket">/&gt;</span>
         </h1>
       </div>
     </div>
@@ -206,63 +44,15 @@
     <!-- ═══ PROJECTS GRID ════════════════════════════════════════ -->
     <div class="projects-grid">
 
-      <!-- ── Card 1: Personal Portfolio ───────────────────────── -->
+      <!-- ── Card 1: Full-Stack Blog App ───────────────────────── -->
       <div class="project-card fade-up">
         <img
           class="project-img"
-          src="./images/portfolio-preview.png"
+          src="./images/blog.png"
           alt="Personal Portfolio Website"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
         />
         <div class="project-img-placeholder" style="display:none;">🌐</div>
-
-        <div class="project-body">
-          <p class="project-summary">
-            A responsive personal portfolio website showcasing projects, technical skills,
-            and professional experience. Built as a multi-page site with smooth animations
-            and a clean design system.
-          </p>
-        </div>
-
-        <div class="project-footer">
-          <span class="project-toggle">
-            <i class="project-toggle-arrow">&#8964;</i>
-            <span class="project-toggle-text">click to expand</span>
-          </span>
-          <span class="project-date">Issued 2025</span>
-        </div>
-
-        <div class="project-details">
-          <div class="project-details-inner">
-            <div class="project-tags">
-              <span class="tag">HTML5</span>
-              <span class="tag">CSS3</span>
-              <span class="tag">JavaScript</span>
-              <span class="tag peach">Bootstrap</span>
-              <span class="tag peach">AOS</span>
-            </div>
-            <p class="project-detail-desc">
-              Multi-page portfolio built from scratch with a custom CSS design system,
-              scroll-triggered animations, and a fully responsive layout that works
-              across all screen sizes.
-            </p>
-            <a class="btn-visit" href="https://jonathan-rubio.github.io/Personal-Portfolio/" target="_blank">
-              <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
-              View on GitHub
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── Card 2: Full-Stack Blog App ──────────────────────── -->
-      <div class="project-card fade-up">
-        <img
-          class="project-img"
-          src="./images/blog-preview.png"
-          alt="Blog Web Application"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-        />
-        <div class="project-img-placeholder" style="display:none;">⚙️</div>
 
         <div class="project-body">
           <p class="project-summary">
@@ -276,7 +66,7 @@
             <i class="project-toggle-arrow">&#8964;</i>
             <span class="project-toggle-text">click to expand</span>
           </span>
-          <span class="project-date">Issued October 2025</span>
+          <span class="project-date">Issued: Oct 2025</span>
         </div>
 
         <div class="project-details">
@@ -288,11 +78,9 @@
               <span class="tag peach">REST API</span>
             </div>
             <p class="project-detail-desc">
-              Full-stack blog platform with CRUD functionality. Users can write and
-              publish posts, edit existing content, and delete entries — all persisted
-              through an Express backend with EJS templating.
+              Full-Stack blog platform with CRUD functionality. Users can write and publish posts, edit existing content, and delete entries — all persisted through an Express backend with EJS templating.
             </p>
-            <a class="btn-visit" href="https://github.com/Jonathan-Rubio" target="_blank">
+            <a class="btn-visit" href="https://github.com/Jonathan-Rubio/Blog-Web-Application" target="_blank">
               <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
               View on GitHub
             </a>
@@ -300,11 +88,11 @@
         </div>
       </div>
 
-      <!-- ── Card 3: SAE International ────────────────────────── -->
+      <!-- ── Card 2: SAE International ────────────────────────── -->
       <div class="project-card fade-up">
         <img
           class="project-img"
-          src="./images/sae.png"
+          src="./images/SAE-INTERNATIONAL.png"
           alt="SAE International"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
         />
@@ -322,7 +110,7 @@
             <i class="project-toggle-arrow">&#8964;</i>
             <span class="project-toggle-text">click to expand</span>
           </span>
-          <span class="project-date">Issued July 2020</span>
+          <span class="project-date">Issued: Jul 2020</span>
         </div>
 
         <div class="project-details">
@@ -345,11 +133,11 @@
         </div>
       </div>
 
-      <!-- ── Card 4: TrepCamp ──────────────────────────────────── -->
+      <!-- ── Card 3: TrepCamp ──────────────────────────────────── -->
       <div class="project-card fade-up">
         <img
           class="project-img"
-          src="./images/trepcamp-award.png"
+          src="./images/brain-ed.JPG"
           alt="TrepCamp 3rd Place"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
         />
@@ -366,7 +154,7 @@
             <i class="project-toggle-arrow">&#8964;</i>
             <span class="project-toggle-text">click to expand</span>
           </span>
-          <span class="project-date">Issued July 2019</span>
+          <span class="project-date">Issued: Jul 2019</span>
         </div>
 
         <div class="project-details">
@@ -390,20 +178,19 @@
         </div>
       </div>
 
-      <!-- ── Card 5: Boeing ────────────────────────────────────── -->
+      <!-- ── Card 4: ARLISS ────────────────────────────────────── -->
       <div class="project-card fade-up">
         <img
           class="project-img"
-          src="./images/boeing.png"
-          alt="Boeing Encore Interiors"
+          src="./images/quantum.jpg"
+          alt="CETYS Quantum"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
         />
         <div class="project-img-placeholder" style="display:none;">🏭</div>
 
         <div class="project-body">
           <p class="project-summary">
-            Led design and validation of high-volume aircraft galley components at
-            Boeing Encore Interiors.
+            Participated at ARLISS, a rover launching competition in Black Rock Desert, Nevada.
           </p>
         </div>
 
@@ -412,23 +199,21 @@
             <i class="project-toggle-arrow">&#8964;</i>
             <span class="project-toggle-text">click to expand</span>
           </span>
-          <span class="project-date">May 2022 — Present</span>
+          <span class="project-date">Issued: Sep 2018</span>
         </div>
 
         <div class="project-details">
           <div class="project-details-inner">
             <div class="project-tags">
-              <span class="tag">Design Engineering</span>
-              <span class="tag peach">Validation</span>
+              <span class="tag">Rover Design</span>
+              <span class="tag peach">Robotics</span>
               <span class="tag">Technical Leadership</span>
-              <span class="tag peach">Aerospace</span>
+              <span class="tag peach">Design</span>
             </div>
             <p class="project-detail-desc">
-              Delivered technical documentation, test procedures, and validation reports
-              across multiple complex concurrent projects. Collaborated with
-              multidisciplinary teams to analyze requirements and meet delivery deadlines.
+              Designed and built an autonomous rover launched via rocket for the ARLISS International competition in Nevada, USA. Responsible for rover chassis design and sensor intergration fo autonomous navigation.
             </p>
-            <a class="btn-visit" href="https://www.boeingencoreinteriors.com/" target="_blank">
+            <a class="btn-visit" href="https://www.arliss.org/" target="_blank">
               <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>
               Visit Page
             </a>
@@ -436,20 +221,19 @@
         </div>
       </div>
 
-      <!-- ── Card 6: Hyundai Translead ─────────────────────────── -->
+      <!-- ── Card 5: CanSat ─────────────────────────── -->
       <div class="project-card fade-up">
         <img
           class="project-img"
-          src="./images/hyundai-translead.png"
-          alt="Hyundai Translead"
+          src="./images/cansat.jpg"
+          alt="CanSat"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
         />
         <div class="project-img-placeholder" style="display:none;">🔬</div>
 
         <div class="project-body">
           <p class="project-summary">
-            Designed and assembled testing configurations that reduced validation time
-            and improved efficiency at Hyundai Translead.
+            3rd Place at the Regional CanSat competition in Tijuana, B.C., México.
           </p>
         </div>
 
@@ -458,7 +242,7 @@
             <i class="project-toggle-arrow">&#8964;</i>
             <span class="project-toggle-text">click to expand</span>
           </span>
-          <span class="project-date">Aug 2020 — Feb 2021</span>
+          <span class="project-date">Issued: May 2018</span>
         </div>
 
         <div class="project-details">
@@ -466,18 +250,191 @@
             <div class="project-tags">
               <span class="tag">Testing</span>
               <span class="tag">Data Analysis</span>
-              <span class="tag peach">Optimization</span>
+              <span class="tag peach">Design</span>
               <span class="tag peach">Validation</span>
             </div>
             <p class="project-detail-desc">
-              Produced research reports aligning results with engineering expectations.
-              Testing configurations built reduced turnaround time significantly —
-              data analysis skills directly applicable to software QA and testing roles.
+              Placed 3rd at the Regional CanSat competition in Tijuana, B.C., México. Designed and built a miniaturized satellite (CanSat) to be launched via drone, collecting and analyzing atmospheric data during descent.
             </p>
             <a class="btn-visit" href="https://www.hyundaitranslead.com/" target="_blank">
               <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>
               Visit Page
             </a>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.projects-grid -->
+
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="section-label">What I've Accomplished</div>
+        <h1 class="section-title">
+          <span class="bracket">&lt;</span>Achievements <span class="bracket">/&gt;</span>
+        </h1>
+      </div>
+    </div>
+
+    <!-- ═══ PROJECTS GRID ════════════════════════════════════════ -->
+    <div class="projects-grid">
+
+      <!-- ── Card 1: Full-Stack Bootcamp ───────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/CertificateBootcamp.jpg"
+          alt="Full-Stack Bootcamp"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">🌐</div>
+
+        <div class="project-body">
+          <p class="project-summary">
+            Certificate of completion of The Complete Full-Stack Web Development Bootcamp.
+          </p>
+        </div>
+
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued: Apr 2026</span>
+        </div>
+
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">JavaScript</span>
+              <span class="tag">React.js</span>
+              <span class="tag">Node.js</span>
+              <span class="tag peach">REST API</span>
+            </div>
+            <p class="project-detail-desc">
+              Full-Stack Web Development Bootcamp certificate, covering modern web development skills including Javascript, React.js, Node.js, PostgreSQL, Web3 and DApps.
+            </p>
+            <a class="btn-visit" href="https://www.udemy.com/certificate/UC-963a9903-367d-431c-90fc-4d9434c2de91/?lid=tlftjymbsk7t&utm_source=braze&utm_medium=email&utm_campaign=250611_Student-MX_EM-Lifecycle_Course-Completion-MVP_T1&utm_method=lifecycle-nurture&utm_funnel=engagement&utm_audience=mx&utm_tactic=progress&utm_content=udemy_braze.1cb6d7b71b9ac5f2f9c5c49038dcb84c" target="_blank">
+              <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>
+              View certificate
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Card 2: TrepCamp ────────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/TrepCamp.png"
+          alt="TrepCamp"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">✈️</div>
+
+        <div class="project-body">
+          <p class="project-summary">
+            Certificate of the Entrepreneurial Simulator for high-impact entrepreneurs at Boston, Massachusetts.
+          </p>
+        </div>
+
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued: Jul 2019</span>
+        </div>
+
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">Entrepreneurship</span>
+              <span class="tag peach">Boston, MA</span>
+              <span class="tag">Leadership</span>
+              <span class="tag peach">3rd Place</span>
+            </div>
+            <p class="project-detail-desc">
+              Awarded 3rd place at the TrepCamp International entrepreneurial competition.
+              Developed and pitched a business venture to a panel of judges, competing
+              against teams from across the globe in Boston, Massachusetts.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Card 3: SolidWorks ──────────────────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/ASSOCIATE-MECHANICAL-DESIGN.png"
+          alt="SolidWorks Associate"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">🎓</div>
+
+        <div class="project-body">
+          <p class="project-summary">
+            SolidWorks Associate Mechanical Design certificate.
+          </p>
+        </div>
+
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued: May 2019</span>
+        </div>
+
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">SolidWorks</span>
+              <span class="tag peach">Mechanical Design</span>
+              <span class="tag">CAD</span>
+              <span class="tag peach">Associate</span>
+            </div>
+            <p class="project-detail-desc">
+                Earned the SolidWorks Associate Mechanical Design certificate, demonstrating proficiency in 3D CAD modeling, assembly design, and technical drawing creation using SolidWorks software.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Card 4: AEM ────────────────────────────────────── -->
+      <div class="project-card fade-up">
+        <img
+          class="project-img"
+          src="./images/Logo_centrado_de_la_Agencia_Espacial_Mexicana.svg.png"
+          alt="CETYS Quantum"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="project-img-placeholder" style="display:none;">🏭</div>
+
+        <div class="project-body">
+          <p class="project-summary">
+            Acknowledgment in space systems engineering applied to PicoSatellite by the Mexican Space Agency (AEM).
+          </p>
+        </div>
+
+        <div class="project-footer">
+          <span class="project-toggle">
+            <i class="project-toggle-arrow">&#8964;</i>
+            <span class="project-toggle-text">click to expand</span>
+          </span>
+          <span class="project-date">Issued: Apr 2018</span>
+        </div>
+
+        <div class="project-details">
+          <div class="project-details-inner">
+            <div class="project-tags">
+              <span class="tag">Space Systems Engineering</span>
+              <span class="tag peach">PicoSatellite</span>
+              <span class="tag">Design</span>
+              <span class="tag peach">Validation</span>
+            </div>
+            <p class="project-detail-desc">
+              Placed 3rd at the Regional CanSat competition in Tijuana, B.C., México. Designed and built a miniaturized satellite (CanSat) to be launched via drone, collecting and analyzing atmospheric data during descent.
+            </p>
           </div>
         </div>
       </div>
@@ -502,6 +459,7 @@
       </div>
     </footer>
 
+    
   </div><!-- /.page-wrap -->
 
   <script src="index.js"></script>
